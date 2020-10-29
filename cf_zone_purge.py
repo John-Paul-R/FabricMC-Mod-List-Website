@@ -16,18 +16,16 @@ params = {
     "status": "active",
     "match": "all"
 }
-r = requests.get(
-    zones_url, 
-    headers=headers,
-    params=params
-    )
+def purgeAll():
+    r = requests.get(
+        zones_url, 
+        headers=headers,
+        params=params
+        )
 
-resData = r.json()
+    resData = r.json()
 
-data = {"purge_everything": True}
-for zone in resData["result"]:
-    post = requests.post("%s/%s/purge_cache" % (zones_url, zone['id']), data=json.dumps(data), headers=headers)
-    print(post.json())
-
-
-  
+    data = {"purge_everything": True}
+    for zone in resData["result"]:
+        post = requests.post("%s/%s/purge_cache" % (zones_url, zone['id']), data=json.dumps(data), headers=headers)
+        print(post.json())

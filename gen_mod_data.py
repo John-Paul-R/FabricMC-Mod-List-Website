@@ -28,7 +28,7 @@ cTime = datetime.datetime.now()
 timestamp = cTime.strftime("%Y-%m-%d %H:%M:%S") + " Timezone: UTC"+ strftime("%z", gmtime()) + " (" + strftime("%Z", gmtime()) + ")"
 
 # Preferences:
-outFileName = "mod_list" +"-"+ files.timestamp()
+outFileName = "mod_list"# +"-"+ files.timestamp()
 OUTPUT_FILE = join(OUTPUT_DIR, outFileName)
 
 #functions
@@ -127,15 +127,6 @@ def getLatestSupportedVersion(mod):
 #     modlist = gqlData["data"]["addons"]
 #     appendNameDescLinkGQL(modlist, outList)
 #     return outList
-def ynInput(msg=""):
-    if (runAll):
-        return True
-    if (len(msg) > 0):
-        print(msg + " (y/n): ")
-    inStr = ""
-    while inStr != 'y' and inStr != 'n':
-        inStr = input().lower()
-    return inStr == 'y'
 
 categories = []
 def categoriesFromResponse(response_data):
@@ -173,45 +164,57 @@ def formatResponse(response_data):
     for mod in mods:
         mod["downloadCount"] = int(mod["downloadCount"])
 
+def run(runAll):
+    def ynInput(msg=""):
+        if (runAll):
+            return True
+        if (len(msg) > 0):
+            print(msg + " (y/n): ")
+        inStr = ""
+        while inStr != 'y' and inStr != 'n':
+            inStr = input().lower()
+        return inStr == 'y'
 
-label = "mod_list"
-file_name = str(OUTPUT_FILE)+"-text_response.json"
-file_name_min = str(OUTPUT_FILE)+".min.json"
-file_name_min_br = str(OUTPUT_FILE)+".min.json.br"
+    print("gen_mod_data")
+    label = "mod_list"
+    file_name = str(OUTPUT_FILE)+"-text_response.json"
+    file_name_min = str(OUTPUT_FILE)+".min.json"
+    file_name_min_br = str(OUTPUT_FILE)+".min.json.br"
 
-if ynInput("Update local data from NikkyCF?"):
-    print("Beginning download...")
-    gqlResponse = queryNikkyCFGraphQL()
-    print("Download complete")
-    mod_data = gqlResponse.json()
-    with open(file_name, "w+", encoding="utf-8") as outFile:
-        outFile.write(gqlResponse.text)
-else:
-    nikkyResponseFileName = input("Enter path to response file: ")
-    with open(nikkyResponseFileName, 'r', encoding="utf-8") as file:
-        mod_data = json.load(file)
+    if ynInput("Update local data from NikkyCF?"):
+        print("Beginning download...")
+        gqlResponse = queryNikkyCFGraphQL()
+        print("Download complete")
+        mod_data = gqlResponse.json()
+        with open(file_name, "w+", encoding="utf-8") as outFile:
+            outFile.write(gqlResponse.text)
+    else:
+        nikkyResponseFileName = input("Enter path to response file: ")
+        with open(nikkyResponseFileName, 'r', encoding="utf-8") as file:
+            mod_data = json.load(file)
 
 
-categoriesFromResponse(mod_data)
-formatResponse(mod_data)
+    categoriesFromResponse(mod_data)
+    formatResponse(mod_data)
 
-out_data = {
-    "mods": mod_data["data"]["addons"],
-    "categories": categories
-}
+    out_data = {
+        "mods": mod_data["data"]["addons"],
+        "categories": categories
+    }
 
-with open(file_name_min, "w+", encoding="utf-8") as outFile:
-    json.dump(out_data, outFile)
-    
-with open(file_name_min, "rb") as inFile:
-    with open(file_name_min_br, "wb+") as outFile:
-        rawdata = inFile.read()
-        rawdatalen = len(rawdata)/1024
-        compressed = brotli.compress(rawdata)
-        compressedlen = len(compressed)/1024
-        outFile.write(compressed)
-        savings = (rawdatalen-compressedlen)
-        savingsPercent = savings/rawdatalen*100
-#        fstr = '%.2f'
-#        print("Compression complete. Compressed file is {fstr%savings} KB ({fstr%savingsPercent}%) smaller than the original. ({fstr%compressedlen} KB vs {fstr%rawdatalen} KB)" % (, , , ,))
-
+    with open(file_name_min, "w+", encoding="utf-8") as outFile:
+        json.dump(out_data, outFile)
+        
+    with open(file_name_min, "rb") as inFile:
+        with open(file_name_min_br, "wb+") as outFile:
+            rawdata = inFile.read()
+            rawdatalen = len(rawdata)/1024
+            compressed = brotli.compress(rawdata)
+            compressedlen = len(compressed)/1024
+            outFile.write(compressed)
+            savings = (rawdatalen-compressedlen)
+            savingsPercent = savings/rawdatalen*100
+    #        fstr = '%.2f'
+    #        print("Compression complete. Compressed file is {fstr%savings} KB ({fstr%savingsPercent}%) smaller than the original. ({fstr%compressedlen} KB vs {fstr%rawdatalen} KB)" % (, , , ,))
+if runAll:
+    run(runAll)
