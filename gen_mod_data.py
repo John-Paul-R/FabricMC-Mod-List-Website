@@ -212,6 +212,6 @@ with open(file_name_min, "rb") as inFile:
         outFile.write(compressed)
         savings = (rawdatalen-compressedlen)
         savingsPercent = savings/rawdatalen*100
-        fstr = '%.2f'
-        print(f"Compression complete. Compressed file is {fstr%savings} KB ({fstr%savingsPercent}%) smaller than the original. ({fstr%compressedlen} KB vs {fstr%rawdatalen} KB)")
+#        fstr = '%.2f'
+#        print("Compression complete. Compressed file is {fstr%savings} KB ({fstr%savingsPercent}%) smaller than the original. ({fstr%compressedlen} KB vs {fstr%rawdatalen} KB)" % (, , , ,))
 
