@@ -3,6 +3,7 @@ import requests
 import json
 from dotenv import load_dotenv
 import os
+import sys
 
 load_dotenv()
 AUTH_TOKEN = os.getenv("AUTH_TOKEN")
@@ -29,3 +30,7 @@ def purgeAll():
     for zone in resData["result"]:
         post = requests.post("%s/%s/purge_cache" % (zones_url, zone['id']), data=json.dumps(data), headers=headers)
         print(post.json())
+
+
+if ( len(sys.argv) > 1 and "-run" in sys.argv[1] ):
+    purgeAll()
