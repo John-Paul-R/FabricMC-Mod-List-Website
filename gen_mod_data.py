@@ -163,6 +163,13 @@ def formatResponse(response_data):
     mods = response_data["data"]["addons"]
     for mod in mods:
         mod["downloadCount"] = int(mod["downloadCount"])
+        mod["dateModified"] = formatDate(mod["dateModified"])
+
+def formatDate(dateStr):
+    y, m, d = dateStr.split('-')
+    d = d[:d.index('T')]
+    return '%s/%s/%s' % (d, m, y)
+
 
 def run(runAll):
     def ynInput(msg=""):
