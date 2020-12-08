@@ -16,3 +16,10 @@ print("Finish service restart.")
 print("Purging Cloudfare cache...")
 from cf_zone_purge import purgeAll
 purgeAll()
+
+import mod_list_maker
+from dotenv import load_dotenv
+import os
+load_dotenv()
+OUTPUT_DIR = str(os.getenv("OUTPUT_DIR"))
+mod_list_maker.run(False, os.path.join(OUTPUT_DIR, "mod_list-text_response.json"), False, False, True)

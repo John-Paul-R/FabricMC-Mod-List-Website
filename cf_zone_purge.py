@@ -34,3 +34,6 @@ def purgeAll():
 
 if ( len(sys.argv) > 1 and "-run" in sys.argv[1] ):
     purgeAll()
+
+if __name__ == '__main__':
+    purgeAll()
