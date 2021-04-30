@@ -206,7 +206,8 @@ def run(runAll):
 
     out_data = {
         "mods": mod_data["data"]["addons"],
-        "categories": categories
+        "categories": categories,
+        "timestamp": datetime.datetime.utcnow().isoformat(),
     }
 
     with open(file_name_min, "w+", encoding="utf-8") as outFile:
