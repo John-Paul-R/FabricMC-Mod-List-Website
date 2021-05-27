@@ -1,5 +1,9 @@
 
-# FiberMC.com (FabricMC-Mod-List-Website)
+# Note: This repo is outdated and no longer maintained. The new repo is [John-Paul-R/fibermc](https://github.com/John-Paul-R/fibermc).
+
+---
+
+## FiberMC.com (FabricMC-Mod-List-Website)
 
 A website listing (almost) all Fabric mods for Minecraft.
 
